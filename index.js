@@ -9,7 +9,7 @@ const corsOptions = {
   origin: [
     "http://localhost:5173",
     "http://localhost:5174",
-    "https://the-guirdian-news.netlify.app"
+    "https://task-management-ahad.netlify.app"
   ],
   credentials: true,
   optionSuccessStatus: 200,
