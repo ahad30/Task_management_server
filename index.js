@@ -57,11 +57,12 @@ async function run() {
 
 
 
+
     app.post('/tasks', async (req, res) => {
       try {
-        const newArtCraft = req.body;
-        console.log(newArtCraft);
-        const result = await taskCollection.insertOne(newArtCraft);
+        const newTask = req.body;
+        console.log(newTask);
+        const result = await taskCollection.insertOne(newTask);
         res.send(result);
       }
       catch (error) {
@@ -77,31 +78,39 @@ async function run() {
       const updatedItem = req.body;   
       const item = {
           $set: {
-            image: updatedItem.image,
-            itemName: updatedItem.itemName,
-            subcategoryName: updatedItem.subcategoryName,
-            shortDescription: updatedItem.shortDescription,
-            price: updatedItem.price,
-            rating: updatedItem.rating,
-            customization: updatedItem.customization,
-            processingTime: updatedItem.processingTime,
-            stockStatus: updatedItem.stockStatus
+           ...updatedItem
           }
       }
-
+       console.log(item)
       const result = await taskCollection.updateOne(filter, item, options);
       res.send(result);
   })
 
-    app.delete('/tasks/:id', async (req, res) => {
+  
+  app.patch('/tasks/:id', async (req, res) => {
+    const id = req.params.id;
+    const filter = { _id: new ObjectId(id) };
+    const updatedDoc = {
+      $set: {
+        status: 'Complete'
+      }
+    }
+    const result = await taskCollection.updateOne(filter, updatedDoc);
+    res.send(result);
+  })
+
+
+
+  app.delete('/tasks/:id', async (req, res) => {
    try{
     const id = req.params.id;
     const query = { _id: new ObjectId(id) }
+    console.log(query)
     const result = await taskCollection.deleteOne(query);
     res.send(result);
    }
    catch (error) {
-    res.status(500).send({ message: "some thing went wrong" })
+    res.status(500).send({ message: "Failed to Delete task" })
   }
   })
 
